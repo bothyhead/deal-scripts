@@ -1,0 +1,91 @@
+# A more comprehensive pbn format than the one supplied
+# Last Modified: 24.Mar.2013
+
+namespace eval pbn {
+
+  variable par
+
+  set par(num) 1
+  set par(incr) 1
+  set par(dealer) [list north east south west]
+  set par(vul) [list None NS EW All NS EW All None EW All None NS All None NS EW]
+
+  foreach seat {North East South West} {
+    set par($seat) "$seat"
+  }
+
+  set par(letter:north) N
+  set par(letter:east) E
+  set par(letter:west) W
+  set par(word:doubled) X
+  set par(word:redoubled) XX
+  set par(word:) ""
+  set par(lho:south) W
+  set par(lho:west) N
+  set par(lho:north) E
+  set par(lho:east) S
+
+  proc pbn_write_line {key value} {
+    puts "\[$key \"$value\"\]"
+  }
+
+  proc getVul {} {
+    variable par
+    set vullist $par(vul)
+    set num $par(num)
+    set index [expr {($num-1)%[llength $vullist]}]
+    lindex $vullist $index
+  }
+
+  proc dealerOrder {args} {
+    variable par
+    set par(dealer) $args
+  }
+
+  proc vulOrder {args} {
+    variable par
+    set par(vul) $args
+  }
+
+  proc getDealer {} {
+    variable par
+    set dlrlist $par(dealer)
+    set num $par(num)
+    set index [expr {($num-1)%[llength $dlrlist]}]
+    lindex $dlrlist $index
+  }
+
+  proc write_deal {} {
+
+    variable par
+    set num $par(num)
+    set dealer [getDealer]
+    set vul [getVul]
+    incr par(num) $par(incr)
+
+    pbn_write_line Board $num
+
+    foreach seat {West North East South} {
+        pbn_write_line $seat $par($seat)
+    }
+
+    pbn_write_line Vulnerable $vul
+
+    set dealer $::env(dealer)
+
+    pbn_write_line Dealer $dealer
+
+    foreach hand {north east south west} {
+        set fmt($hand) "[$hand spades].[$hand hearts].[$hand diamonds].[$hand clubs]"
+    }
+
+    pbn_write_line Deal "N:$fmt(north) $fmt(east) $fmt(south) $fmt(west)"
+
+    puts ""
+
+  }
+}
+
+proc write_deal {} {
+  ::pbn::write_deal
+}
