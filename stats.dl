@@ -5,7 +5,7 @@ set stats(ntMaking) 0
 
 east is "KQ54 5432 32 432"
 
-source dd/lib.tcl
+source dd/lib.dl
 
 main {
   reject unless [nt west 20 22]
