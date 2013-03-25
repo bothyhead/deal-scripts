@@ -1,5 +1,5 @@
 # script to generate hands suitable for stayman
-# daved 30.jun.2010
+# 30.jun.2010
 
 source dd/lib.tcl
 

@@ -1,5 +1,5 @@
 # script to generate hands suitable for transfers
-# daved 30.jun.2010
+# 30.jun.2010
 
 source dd/lib.tcl
 
@@ -11,7 +11,7 @@ main {
   set dealer $env(dealer)
 
   reject unless {[nt $dealer $minNT $maxNT]}
-  accept if [jacoby [partner $dealer] $minNT $maxNT]
+  accept if {[jacoby [partner $dealer] $minNT $maxNT]}
 
 }
 
