@@ -10,8 +10,17 @@ main {
 
   set dealer $env(dealer)
 
-  reject unless {[nt $dealer $minNT $maxNT]}
-  accept if {[jacoby [partner $dealer] $minNT $maxNT]}
+  reject unless [nt $dealer $minNT $maxNT]
+
+  set pard [partner $dealer]
+  puts "$pard"
+
+  accept if [jacoby $pard $minNT $maxNT]
+
+  reject
+
+
+accept
 
 }
 

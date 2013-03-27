@@ -1,5 +1,5 @@
 # script to generate hands suitable for stayman
-# 30.jun.2010
+# 27.Mar.2013
 
 source dd/lib.dl
 
@@ -16,18 +16,18 @@ main {
   set pard [partner $dealer]
 
   # dealer can open 1NT
-  reject unless {[nt $dealer $minNT $maxNT]}
+  reject unless [nt $dealer $minNT $maxNT]
 
   # if responder is 4333 shape, it's better to play in no trumps
-  reject if {[shape4333 $pard]}
+  reject if [shape4333 $pard]
 
   set hc_pard [hcp $pard]
 
   # partner either fits a weak takout or has a 4-card major
   if {$hc_pard < (25 - $maxNT)} {
-    accept if {[WeakTakeout $pard]}
+    accept if [WeakTakeout $pard]
   } else {
-    accept if {[FourCardMajor $pard]}
+    accept if [FourCardMajor $pard]
   }
 
   reject

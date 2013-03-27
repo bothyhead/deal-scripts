@@ -3,7 +3,7 @@
 set stats(dealCount) 0
 set stats(ntMaking) 0
 
-east is "KQ54 5432 32 432"
+east is "AJ543 543 432 32"
 
 source dd/lib.dl
 
