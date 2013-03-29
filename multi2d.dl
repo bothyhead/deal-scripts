@@ -1,0 +1,30 @@
+# Multi2D hands
+# 29.Mar.2013
+
+source dd/lib.dl
+source dd/weak2.dl
+
+main {
+
+  set dealer $env(dealer)
+  set pard [partner $dealer]
+
+  # Strong NT, or weak 2 in a major, or strong minor
+  accept if [StrongMinor $dealer] [nt $dealer 21 22] [WeakTwo $dealer] 
+  reject
+
+}
+
+proc StrongMinor {hand} {
+
+  # long minor
+  if {[diamonds $hand] < 7 && [clubs $hand] < 7} {return 0}
+
+  # 9 or 10 playing tricks
+  set pt [PlayingTricks $hand]
+  if {$pt == 9 || $pt == 10} {return 1}
+
+  return 0
+
+}
+

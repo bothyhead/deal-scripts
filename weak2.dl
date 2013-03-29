@@ -1,27 +1,46 @@
-# Taken from Thomas Andrew's sample script
+# Modified example taken from Thomas Andrew's sample script
 #
 # By agreement, you open a weak 2 with exactly 6 cards in your major,
-# fewer than 4 cards in the other major, 5-10 HCP and either 2 of the
+# fewer than 4 cards in the other major, 6-10 HCP and either 2 of the
 # top 3 or three of the top 5 in your suit.
 #
+# 28.Mar.2013
+
+source dd/lib.dl
 
 defvector W2Q 2 2 2 1 1
 
 main {
-	set sh [hcp south]
-	reject if {$sh > 10} {$sh < 5} {[clubs south] > 3} {[diamonds south] > 3}
 
-	set s [spades south]
-	if {$s == 6} {
-		reject if {[hearts south] > 3} {[W2Q south spades] <= 3}
-		accept
-	}
+  accept if [WeakTwo south] 
+  reject
 
-	reject if {$s > 3}
-
-	set h [hearts south]
-	reject if {$h != 6} {[W2Q south hearts] <= 3}
-
-	accept
 }
+
+proc WeakTwo {hand} {
+
+	set p [hcp $hand]
+	set s [spades $hand]
+	set h [hearts $hand]
+
+  # point range ok 
+	if {($p > 10) || ($p < 6)} {return 0}
+
+  # does not satisify the rule of 20
+  if {($p + [TwoLongest $hand]) >= 20} {return 0}
+  
+  # no singleton or void
+  if {[ShortSuitLength $hand] <= 1} {return 0}
+
+  # suitable spades, and no 4 hearts
+  if {($s == 6) && ([W2Q $hand spades] >= 4) && ([hearts $hand] < 4)} {return 1}
+
+  # suitable hearts, and no 4 spades
+  if {($h == 6) && ([W2Q $hand hearts] >= 4) && ([spades $hand] < 4)} {return 1}
+
+  # otherwise
+	return 0
+
+}
+
 
