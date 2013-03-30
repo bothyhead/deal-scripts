@@ -1,0 +1,76 @@
+# Multi2D hands statistics
+
+# % hands that are multi:       0.8
+# % multi hands weak twos          62
+# % multi hands balanced           30
+# % multi hands strong minors      8
+
+
+# 30.Mar.2013
+
+set stats(DealsTried) 0
+set stats(Balanced) 0
+set stats(WeakTwo) 0
+set stats(StrongMinor) 0
+
+source dd/lib.dl
+source dd/weak2.dl
+
+main {
+
+  global stats
+
+  incr stats(DealsTried)
+
+  set dealer $env(dealer)
+  set pard [partner $dealer]
+
+  if [StrongMinor $dealer] {
+    incr stats(StrongMinor) 
+    accept
+  }
+
+  if [nt $dealer 21 22] {
+    incr stats(Balanced)
+    accept
+  }
+
+  if [WeakTwo $dealer] {
+    incr stats(WeakTwo)
+    accept
+  }
+
+  reject
+
+}
+
+proc StrongMinor {hand} {
+
+  # long minor
+  if {[diamonds $hand] < 7 && [clubs $hand] < 7} {return 0}
+
+  # 9 or 10 playing tricks
+  set pt [PlayingTricks $hand]
+  if {$pt == 9 || $pt == 10} {return 1}
+
+  return 0
+
+}
+
+proc write_deal {} {
+}
+
+proc flush_deal {} {
+
+  global stats
+  set TotalMulti [expr $stats(Balanced) + $stats(WeakTwo) + $stats(StrongMinor)]
+
+  puts ""
+  puts "$stats(DealsTried) deals tried"
+  puts "[expr {100 * double($TotalMulti) / $stats(DealsTried)}]% are suitable for Multi2D"
+  puts ""
+  puts "[expr {100 * double($stats(WeakTwo)) / $TotalMulti}]% of the Multi hands are weak twos"
+  puts "[expr {100 * double($stats(Balanced)) / $TotalMulti}]% of the Multi hands are big balanced"
+  puts "[expr {100 * double($stats(StrongMinor)) / $TotalMulti}]% of the Multi hands are strong minors"
+
+}
