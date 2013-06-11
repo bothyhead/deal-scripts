@@ -1,0 +1,17 @@
+# script to generate 12 - 14 balanced hands
+# 18.Apr.2013
+
+source dd/lib.dl
+
+set minNT 12
+set maxNT 14
+
+main {
+
+  set dealer $env(dealer)
+  reject unless [nt $dealer $minNT $maxNT]
+
+accept
+
+}
+

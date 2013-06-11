@@ -1,5 +1,5 @@
 # script to generate hands suitable for transfers
-# 30.jun.2010
+# 29.Mar.2013
 
 source dd/lib.dl
 
@@ -9,18 +9,31 @@ set maxNT 14
 main {
 
   set dealer $env(dealer)
+  set pard [partner $dealer]
 
   reject unless [nt $dealer $minNT $maxNT]
-
-  set pard [partner $dealer]
-  puts "$pard"
-
   accept if [jacoby $pard $minNT $maxNT]
-
   reject
 
-
 accept
+
+}
+
+# accept once there is at least 1 5 card suit
+proc jacoby {hand ntmin ntmax} {
+
+  set p [hcp $hand]
+  set h [hearts $hand]
+  set s [spades $hand]
+
+  if {($s < 5) && ($h < 5) && ([diamonds $hand] < 6) && ([clubs $hand] < 6)} {return 0}
+
+  # ignore weak 5/4 hands, which are more suited to stayman
+  if {($h == 5 && $s >=4 ) || ($s == 5 && $h >= 4)} {
+    if {$p < 25 - $ntmax} {return 0}
+  }
+
+  return 1
 
 }
 
