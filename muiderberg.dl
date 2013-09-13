@@ -1,0 +1,32 @@
+# Muiderberg 
+# 09.Sep.2013
+
+source dd/lib.dl
+
+main {
+
+  set dealer $env(dealer)
+  set h [hcp $dealer]
+
+  # allowed point range is 6 to 10
+  reject if {($h < 6) || ($h > 10)}
+
+  # Are we 5 in the Majors and 4+ the minors?
+  accept if [MuiderbergShape $dealer]
+
+  reject
+
+}
+
+shapefunc MuiderbergShape {
+
+  # no 6 card minor
+  if {$d >= 6 || $c >= 6} {return 0}
+
+  # Major and a Minor, either 5/4 or 5/5
+  if {($s == 5 || $h == 5) && ($d >= 4 || $c >= 4)} {return 1}
+
+  return 0
+
+}
+
