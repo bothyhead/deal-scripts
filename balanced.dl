@@ -11,7 +11,7 @@ main {
   set dealer $env(dealer)
   reject unless [nt $dealer $minNT $maxNT]
 
-accept
+  accept
 
 }
 

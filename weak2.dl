@@ -11,24 +11,23 @@ source dd/lib.dl
 defvector W2Q 2 2 2 1 1
 
 main {
-
-  accept if [WeakTwo south] 
-  reject
-
+  reject if ![WeakTwo south] 
+  accept
 }
 
 proc WeakTwo {hand} {
 
-	set p [hcp $hand]
-	set s [spades $hand]
-	set h [hearts $hand]
+  set p [hcp $hand]
+  set s [spades $hand]
+  set h [hearts $hand]
 
-  # point range ok 
-	if {($p > 10) || ($p < 6)} {return 0}
+  # points outside of acceptable range
+  if {($p > 10) || ($p < 6)} {return 0}
 
-  # does not satisify the rule of 20
-  if {($p + [TwoLongest $hand]) >= 20} {return 0}
-  
+  # does not satisfy the rule of 20
+  # if {($p + [TwoLongest $hand]) >= 20} {return 0}
+  if {[expr {$p + [TwoLongest $hand]}] >= 20} {return 0}
+
   # no singleton or void
   if {[ShortSuitLength $hand] <= 1} {return 0}
 
@@ -39,7 +38,7 @@ proc WeakTwo {hand} {
   if {($h == 6) && ([W2Q $hand hearts] >= 4) && ([spades $hand] < 4)} {return 1}
 
   # otherwise
-	return 0
+  return 0
 
 }
 
