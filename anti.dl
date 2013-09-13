@@ -1,0 +1,36 @@
+# script to generate hands suitable for ANTI defense to 1NT 
+# 21.Aug.2013
+
+source dd/lib.dl
+
+set minNT 12
+set maxNT 14
+
+main {
+
+  # dealer can open 1NT (weak)
+  reject unless [nt south $minNT $maxNT]
+
+  # west has 11 to 14 points
+  set p [hcp west]
+  reject unless {($p >= 12) && ($p <= 15)}
+
+  # west has a single suited hand or 5/4 in two suits
+  reject unless [FiveFour west] {[LongSuitLength west] >= 6}
+
+  # the 5/4 suits each need about 4+ points  each
+  reject if {([spades west] >= 4) && ([hcp west spades] < 4)}
+  reject if {([hearts west] >= 4) && ([hcp west hearts] < 4)}
+  reject if {([diamonds west] >= 4) && ([hcp west diamonds] < 4)}
+  reject if {([clubs west] >= 4) && ([hcp west clubs] < 4)}
+
+  # prevent north from getting two excited
+  reject if {[hcp north] > 10}
+  
+  # finally
+  accept
+
+}
+
+
+

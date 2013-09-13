@@ -1,0 +1,64 @@
+# script to generate hands suitable for asptro defense to 1NT 
+# 14.Aug.2013
+
+source dd/lib.dl
+
+set minNT 12
+set maxNT 14
+
+main {
+
+  # dealer can open 1NT (weak)
+  reject unless [nt south $minNT $maxNT]
+
+  # # west has 12 to 15 points (11-14 is also a possible range)
+  # set p [hcp west]
+  # reject unless {($p >= 12) && ($p <= 15)}
+
+  # # west has 5/4 in any two suits, one of which is a major
+  # set s [spades west]
+  # set h [hearts west]
+
+  # reject unless {[FiveFour west] && (($s >= 4) || ($h >=4))}
+
+  # # the 5/4 suits each need about 4+ points  each
+  # reject if {([spades west] >= 4) && ([hcp west spades] < 4)}
+  # reject if {([hearts west] >= 4) && ([hcp west hearts] < 4)}
+  # reject if {([diamonds west] >= 4) && ([hcp west diamonds] < 4)}
+  # reject if {([clubs west] >= 4) && ([hcp west clubs] < 4)}
+
+  reject unless [asptro west]
+
+  # prevent north from getting two excited
+  reject if {[hcp north] > 10}
+  
+  # finally
+  accept
+
+}
+
+
+proc asptro {hand} {
+
+  # west has 12 to 15 points (11-14 is also a possible range)
+  set p [hcp $hand]
+  if {($p < 12) || ($p > 15)} {return 0}
+
+  # $hand has 5/4 in any two suits, one of which is a major
+  set s [spades $hand]
+  set h [hearts $hand]
+
+  if {!([FiveFour $hand] && (($s >= 4) || ($h >=4)))} {return 0}
+
+  # the 5/4 suits each need about 4+ points  each
+  if {([spades $hand] >= 4) && ([hcp $hand spades] < 4)} {return 0}
+  if {([hearts $hand] >= 4) && ([hcp $hand hearts] < 4)} {return 0}
+  if {([diamonds $hand] >= 4) && ([hcp $hand diamonds] < 4)} {return 0}
+  if {([clubs $hand] >= 4) && ([hcp $hand clubs] < 4)} {return 0}
+
+  return 1
+
+}
+
+
+

@@ -1,0 +1,25 @@
+# script to generate hands suitable for defense to 1NT (e.g. DONT)
+# 14.Aug.2013
+
+source dd/lib.dl
+
+set minNT 12
+set maxNT 14
+
+main {
+
+  # dealer can open 1NT
+  reject unless [nt south $minNT $maxNT]
+
+  # west has 5/4 in any two suits, or else a single long 
+  reject unless {[TwoLongest west] >= 9}
+
+  set h [hcp west]
+
+  reject unless {($h >= 11) && ($h <= 14)}
+
+  accept
+
+}
+
+
