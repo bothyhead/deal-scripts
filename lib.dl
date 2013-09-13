@@ -8,7 +8,7 @@ source lib/utility.tcl
 
 # the sum of the two longest suits
 patternfunc TwoLongest {
-  return $l1 + $l2
+  return [expr {$l1 + $l2}]
 }
 
 # the length of the shortest suit
@@ -16,28 +16,31 @@ patternfunc ShortSuitLength {
   return $l4
 }
 
+# the length of the longest suit
+patternfunc LongSuitLength {
+  return $l1
+}
+
 # rule of 20
 proc RuleOf20 {hand} {
-
   set p [hcp $hand]
-
   if {$p >= 12} {return 1}
   if {($p + [TwoLongest $hand]) >= 20 } {return 1}
-
   return 0
-
 }
 
 # suit quality test for overcalls
 holdingProc SuitQuality {len A K Q J T} {
+  set HigherHonors [expr {$A+$K+$Q+$J}]
+  set Quality [expr {$len + $HigherHonors}]
+  if {$T && ($HigherHonors >= 2)} {incr Quality}
+  return $Quality
+}
 
-   set HigherHonors [expr {$A+$K+$Q+$J}]
-
-   set Quality [expr {$len + $HigherHonors}]
-
-   if {$T && ($HigherHonors >= 2)} {incr Quality}
-
-   return $Quality
+# top honours
+holdingProc TopHonours {len A K Q J} {
+  set NumberOfHonours [expr {$A+$K+$Q+$J}]
+  return $NumberOfHonours
 }
  
 # return the number of playing tricks
@@ -51,4 +54,29 @@ shapefunc FourCardMajor {
   if {$s == 4 || $h == 4} {return 1}
   return 0
 }
+
+# 5/4 distribution (not including 5440)
+patternfunc FiveFour {
+  if {($l1 == 5) && ($l2 == 4) && ($l3 < 4)} {return 1}
+  return 0
+}
+
+# quick tricks
+holdingProc -double QuickTricks {A K Q J T length} {
+
+# A   1
+# AK  1
+# AQ  1.5
+# KQ  1
+# Kx  0.5
+
+  if {$A && $K} {return 2}
+  if {$A} {return 1}
+  if {$K && $Q} {return 1}
+  if {$K && $length>1} {return 0.5}
+  return 0
+}
+
+
+
 
