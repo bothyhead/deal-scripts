@@ -21,6 +21,28 @@ patternfunc LongSuitLength {
   return $l1
 }
 
+# the length of the longest major
+shapefunc MajorSuitLength {
+
+  if {$s > $h} {
+    return $s
+  } else {
+    return $h
+  }
+
+}
+
+# the length of the longer minor
+shapefunc MinorSuitLength {
+
+  if {$d > $c} {
+    return $d
+  } else {
+    return $c
+  }
+
+}
+
 # rule of 20
 proc RuleOf20 {hand} {
   set p [hcp $hand]

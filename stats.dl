@@ -1,25 +1,76 @@
-# Evaluating how often 3NT makes opposite a strong NT
+# Should I pass or bid opposite a 1H opening (Acol) holding JT932 32 32 A432
 
-set stats(dealCount) 0
-set stats(ntMaking) 0
+set stats(hearts6) 0
+set stats(hearts7) 0
+set stats(hearts8) 0
+set stats(spades6) 0
+set stats(spades7) 0
+set stats(spades8) 0
+set stats(nt6) 0
+set stats(nt7) 0
+set stats(nt8) 0
+# set stats(deals) 0
 
-east is "AJ543 543 432 32"
+east is "JT932 32 32 A432"
 
 source dd/lib.dl
 
 main {
-  reject unless [nt west 20 22]
+
+  set p [hcp west]
+  reject if {($p < 12) || ($p > 19)}
+
+  reject if [nt west 12 14]
+
+  set s [spades west]
+  set h [hearts west]
+  set c [clubs west]
+  set d [diamonds west]
+  reject if {($s > 5) || ($s > $h) || ($c >= $h) || ($d >= $h)}
+
   accept
 }	       
 
 proc write_deal {} {
   global stats
-  incr stats(dealCount)
-  if {[::deal::tricks west notrump] >= 9} {incr stats(ntMaking)}
+
+  set h [::deal::tricks west hearts] 
+  set s [::deal::tricks west spades] 
+  set n [::deal::tricks west notrumps] 
+
+  if {$h <= 6} {incr stats(hearts6)}
+  if {$h == 7} {incr stats(hearts7)}
+  if {$h >= 8} {incr stats(hearts8)}
+  if {$s <= 6} {incr stats(spades6)}
+  if {$s == 7} {incr stats(spades7)}
+  if {$s >= 8} {incr stats(spades8)}
+  if {$n <= 6} {incr stats(notrump6)}
+  if {$n == 7} {incr stats(notrump7)}
+  if {$n >= 8} {incr stats(notrump8)}
 }
 
 proc flush_deal {} {
   global stats
+
+  # puts ""
+  # puts "1H [expr 100 * $stats(hearts7) / $stats(deals)]%"
+  # puts "2H [expr 100 * $stats(hearts8) / $stats(deals)]%"
+  # puts "3H [expr 100 * $stats(hearts9) / $stats(deals)]%"
+  # puts "1S [expr 100 * $stats(spades7) / $stats(deals)]%"
+  # puts "2S [expr 100 * $stats(spades8) / $stats(deals)]%"
+  # puts "3S [expr 100 * $stats(spades9) / $stats(deals)]%"
+  # puts "1NT [expr 100 * $stats(nt7) / $stats(deals)]%"
+  # puts "2NT [expr 100 * $stats(nt8) / $stats(deals)]%"
+  # puts "3NT [expr 100 * $stats(nt9) / $stats(deals)]%"
+
   puts ""
-  puts "3NT makes [expr 100 * $stats(ntMaking) / $stats(dealCount)]% of the time"
+  puts "0H $stats(hearts6)"
+  puts "1H $stats(hearts7)"
+  puts "2H $stats(hearts8)"
+  puts "0S $stats(spades6)"
+  puts "1S $stats(spades7)"
+  puts "2S $stats(spades8)"
+  puts "0NT $stats(nt6)"
+  puts "1NT $stats(nt7)"
+  puts "2NT $stats(nt8)"
 }

@@ -1,0 +1,19 @@
+# Baron
+# 13.Sep.2013
+
+# Opener is 2NT & Responder is unbalanced w/ 5+ hcp and a 4-card suit - looking for 4-4 fit
+
+source dd/lib.dl
+
+main {
+
+  set dealer $env(dealer)
+
+  reject if ![balanced $dealer 20 22]
+  reject if {[hcp [partner $dealer]] < 5}
+  reject if {([MajorSuitLength [partner $dealer]] != 4) || ([MinorSuitLength [partner $dealer]] != 4)}
+
+  accept
+
+}
+

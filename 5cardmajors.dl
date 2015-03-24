@@ -1,0 +1,22 @@
+# hands suitable for 5 card Majors
+# 29.05.2014
+
+source dd/lib.dl
+
+shapecond FiveCardMajors {($s>=5 || $h>=5)}
+
+main {
+
+  set dealer $env(dealer)
+  set pard [partner $dealer]
+
+  # dealer must have opening points
+  reject if {[hcp $dealer] < 12}
+
+  # dealer must have a 5 card Major
+  reject if ![FiveCardMajors $dealer]
+
+  accept
+
+}
+

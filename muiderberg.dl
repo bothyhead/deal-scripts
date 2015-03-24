@@ -1,6 +1,8 @@
 # Muiderberg 
 # 09.Sep.2013
 
+# Opening bid of 2 of a Major shows (5x)(4+x) 6-10 hcp
+
 source dd/lib.dl
 
 main {

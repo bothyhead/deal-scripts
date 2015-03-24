@@ -1,0 +1,33 @@
+# hands suitable for either 2/1 or forcing NT response
+# 29.05.2014
+
+source dd/lib.dl
+
+shapecond FiveCardMajors {($s>=5 || $h>=5)}
+
+main {
+
+  # set dealer $env(dealer)
+  # set pard [partner $dealer]
+
+  set dealer west
+  set pard [partner $dealer]
+  # set pard east
+
+  # dealer must have opening points
+  reject if {[hcp $dealer] < 12}
+
+  # dealer must have a 5 card Major
+  reject if ![FiveCardMajors $dealer]
+
+  # partner must have enough to respond
+  reject if {[hcp $pard] < 6}
+
+  # reject responder with four spades if opener has five hearts or spades
+  reject if {([spades $pard] >= 4) && (([hearts $dealer] >= 5) || ([spades $dealer] >= 5))}
+
+
+  accept
+
+}
+

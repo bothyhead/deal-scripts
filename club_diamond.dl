@@ -1,0 +1,25 @@
+# hands suitable for Gorey Club/Diamond
+# 06.Nov.2013
+
+source dd/lib.dl
+
+set minNT 12
+set maxNT 14
+
+shapecond FiveCardSuit {($s>=5 || $h>=5 || $d>=5)}
+
+main {
+
+  set dealer $env(dealer)
+  set pard [partner $dealer]
+
+  # dealer must have opening points
+  reject if {[hcp $dealer] < 12}
+
+  # dealer can not have 5 or more S, H, or D
+  reject if [FiveCardSuit $dealer]
+
+  accept
+
+}
+
